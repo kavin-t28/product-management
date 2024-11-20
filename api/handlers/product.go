@@ -41,7 +41,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, ca
 	}
 
 	// Queue image processing
-	services.QueueImageProcessing(product.ProductImages)
+	// services.QueueImageProcessing(product.ProductImages)
 
 	utils.RespondWithJSON(w, http.StatusCreated, product)
 }
@@ -49,14 +49,6 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, ca
 // GetProductHandler fetches a product by ID
 func GetProductHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, cache *redis.Client) {
 	id := mux.Vars(r)["id"]
-
-	// Check Cache first
-	cachedProduct, err := services.GetCachedProduct(cache, id)
-	if err == nil && cachedProduct != nil {
-		// Return cached product if available
-		utils.RespondWithJSON(w, http.StatusOK, cachedProduct)
-		return
-	}
 
 	// Fetch from DB if not found in cache
 	product, err := models.GetProductByID(db, id)
@@ -66,7 +58,7 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request, db *sql.DB, cache
 	}
 
 	// Cache the result for future use
-	services.CacheProduct(cache, product)
+	// services.CacheProduct(cache, product)
 
 	utils.RespondWithJSON(w, http.StatusOK, product)
 }
